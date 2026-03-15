@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="popup.css">
+  <title>LingoLayer</title>
+</head>
+<body>
+  <div class="popup-container">
+    <header class="popup-header">
+      <div class="logo">
+        <span class="logo-icon">LL</span>
+        <h1>LingoLayer</h1>
+      </div>
+      <p class="tagline">Doomscroll your way to fluency</p>
+    </header>
+
+    <div class="master-toggle">
+      <label for="enabled">Extension Enabled</label>
+      <label class="toggle">
+        <input type="checkbox" id="enabled" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <form id="settings-form" autocomplete="off">
+
+      <!-- ── Learning (open by default) ── -->
+      <details class="group" open>
+        <summary class="group-header">Learning</summary>
+        <div class="group-body">
+          <div class="field-row">
+            <div class="field">
+              <label for="language">Language</label>
+              <select id="language">
+                <option value="German" selected>German</option>
+                <option value="Spanish">Spanish</option>
+                <option value="French">French</option>
+                <option value="Italian">Italian</option>
+                <option value="Portuguese">Portuguese</option>
+                <option value="Dutch">Dutch</option>
+                <option value="Japanese">Japanese</option>
+                <option value="Korean">Korean</option>
+                <option value="Mandarin Chinese">Mandarin</option>
+                <option value="Hindi">Hindi</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="level">CEFR Level</label>
+              <select id="level">
+                <option value="A1">A1 - Beginner</option>
+                <option value="A2">A2 - Elementary</option>
+                <option value="B1" selected>B1 - Intermediate</option>
+                <option value="B2">B2 - Upper Int.</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="active-site">Active On</label>
+            <select id="active-site">
+              <option value="reddit" selected>Reddit</option>
+            </select>
+          </div>
+        </div>
+      </details>
+
+      <!-- ── LLM Provider (collapsed by default) ── -->
+      <details class="group">
+        <summary class="group-header">LLM Provider</summary>
+        <div class="group-body">
+          <div class="field">
+            <label for="provider">Provider</label>
+            <select id="provider">
+              <option value="featherless" selected>Featherless.ai</option>
+              <option value="openai">OpenAI</option>
+              <option value="claude">Claude (Anthropic)</option>
+              <option value="local">Local / Custom</option>
+            </select>
+          </div>
+          <div class="field" id="endpoint-field" style="display:none">
+            <label for="endpoint-url">Endpoint URL</label>
+            <input type="text" id="endpoint-url" placeholder="http://localhost:11434/v1/chat/completions" spellcheck="false">
+            <span class="label-hint">OpenAI-compatible endpoint (Ollama, LM Studio, vLLM, etc.)</span>
+          </div>
+          <div class="field">
+            <label for="api-key">API Key</label>
+            <div class="key-input-wrap">
+              <input type="password" id="api-key" placeholder="fl-..." spellcheck="false">
+              <button type="button" id="toggle-key" class="icon-btn" title="Show/hide key">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="model">Model</label>
+            <input type="text" id="model" placeholder="Qwen/Qwen2.5-7B-Instruct" spellcheck="false">
+          </div>
+        </div>
+      </details>
+
+      <!-- ── Voice (collapsed by default) ── -->
+      <details class="group">
+        <summary class="group-header">
+          <span>Voice</span>
+          <label class="toggle toggle-inline" onclick="event.stopPropagation()">
+            <input type="checkbox" id="voice-enabled">
+            <span class="slider"></span>
+          </label>
+        </summary>
+        <div class="group-body">
+          <div class="field">
+            <label for="elevenlabs-key">ElevenLabs API Key</label>
+            <input type="password" id="elevenlabs-key" placeholder="xi-..." spellcheck="false">
+          </div>
+        </div>
+      </details>
+
+      <button type="submit" class="save-btn">Save Settings</button>
+    </form>
+
+    <div id="status" class="status hidden"></div>
+
+    <footer class="popup-footer">
+      <span>v1.0 &middot; Built for AI-Hackathon 2026</span>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

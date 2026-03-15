@@ -1,0 +1,281 @@
+:root {
+  --ll-accent: #7c4dff;
+  --ll-accent-light: #b388ff;
+  --ll-bg-glass: rgba(15, 15, 30, 0.88);
+  --ll-border-glass: rgba(255, 255, 255, 0.12);
+  --ll-text: #eee;
+  --ll-text-dim: #999;
+  --ll-radius: 8px;
+}
+
+/* ── de-bridge inline element ────────────────────────────── */
+
+.de-bridge {
+  display: inline;
+  color: var(--ll-accent-light) !important;
+  border-bottom: 2px dashed var(--ll-accent);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  font-style: normal;
+  position: relative;
+  outline: none;
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+.de-bridge:hover,
+.de-bridge:focus {
+  color: #fff !important;
+  border-bottom-color: var(--ll-accent-light);
+  background: rgba(124, 77, 255, 0.12);
+}
+
+/* ── Speaker button inside de-bridge ─────────────────────── */
+
+.ll-speak-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-left: 3px;
+  vertical-align: middle;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s;
+  color: var(--ll-accent-light);
+  position: relative;
+  top: -1px;
+}
+
+.de-bridge:hover .ll-speak-btn,
+.de-bridge:focus .ll-speak-btn {
+  opacity: 0.7;
+}
+
+.ll-speak-btn:hover {
+  opacity: 1 !important;
+  color: #fff;
+}
+
+.ll-speak-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.ll-speak-loading .ll-speak-icon {
+  animation: ll-pulse 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes ll-pulse {
+  0% { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
+/* ── Tooltip ─────────────────────────────────────────────── */
+
+.ll-tooltip {
+  position: absolute;
+  z-index: 2147483647;
+  max-width: 320px;
+  min-width: 180px;
+  padding: 12px 14px;
+  border-radius: var(--ll-radius);
+  background: var(--ll-bg-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--ll-border-glass);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ll-text);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.ll-tooltip-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ll-tip-header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.ll-tip-de {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ll-accent-light);
+}
+
+.ll-tip-pron {
+  font-size: 12px;
+  color: var(--ll-text-dim);
+  font-style: italic;
+}
+
+.ll-tip-original {
+  font-size: 12px;
+  color: var(--ll-text-dim);
+  margin-bottom: 4px;
+}
+
+.ll-tip-context {
+  font-size: 12px;
+  color: var(--ll-accent-light);
+  opacity: 0.8;
+  margin-bottom: 6px;
+  font-style: italic;
+}
+
+.ll-tip-grammar {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.ll-tag {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(124, 77, 255, 0.2);
+  color: var(--ll-accent-light);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.ll-tip-reason {
+  font-size: 11px;
+  color: var(--ll-text-dim);
+  border-top: 1px solid var(--ll-border-glass);
+  padding-top: 6px;
+  margin-top: 4px;
+}
+
+/* ── Loading shimmer on containers ───────────────────────── */
+
+[data-lingolayer="loading"] {
+  position: relative;
+}
+
+[data-lingolayer="loading"]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(124, 77, 255, 0.06) 40%,
+    rgba(124, 77, 255, 0.12) 50%,
+    rgba(124, 77, 255, 0.06) 60%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: ll-shimmer 1.5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes ll-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ── Toast notifications ─────────────────────────────────── */
+
+.ll-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 2147483647;
+  padding: 10px 16px;
+  border-radius: var(--ll-radius);
+  background: var(--ll-bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--ll-border-glass);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13px;
+  color: var(--ll-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.ll-toast.ll-toast-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ll-toast-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+.ll-toast-success .ll-toast-icon {
+  background: rgba(76, 175, 128, 0.2);
+  color: #4caf80;
+}
+
+.ll-toast-error .ll-toast-icon {
+  background: rgba(239, 83, 80, 0.2);
+  color: #ef5350;
+}
+
+/* ── Replacement counter badge ───────────────────────────── */
+
+.ll-counter {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 2147483646;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: var(--ll-bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--ll-border-glass);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 12px;
+  color: var(--ll-text-dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: default;
+  user-select: none;
+  transition: opacity 0.3s;
+}
+
+.ll-counter-logo {
+  font-weight: 800;
+  font-size: 10px;
+  color: var(--ll-accent-light);
+  background: rgba(124, 77, 255, 0.2);
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+
+.ll-counter-num {
+  font-weight: 600;
+  color: var(--ll-accent-light);
+}
