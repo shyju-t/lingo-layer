@@ -204,6 +204,18 @@
       return;
     }
 
+    if (provider === 'local') {
+      try {
+        const granted = await chrome.permissions.request({
+          origins: ['http://localhost/*', 'http://127.0.0.1/*']
+        });
+        if (!granted) {
+          showStatus('Localhost permission required for local provider.', 'error');
+          return;
+        }
+      } catch (_) {}
+    }
+
     const providerKeys = { ...(currentSettings?.providerKeys || {}) };
     const providerModels = { ...(currentSettings?.providerModels || {}) };
     const providerEndpoints = { ...(currentSettings?.providerEndpoints || {}) };
@@ -243,6 +255,11 @@
     const input = els.apiKey;
     input.type = input.type === 'password' ? 'text' : 'password';
   });
+
+  const voiceToggleLabel = $('#voice-toggle-label');
+  if (voiceToggleLabel) {
+    voiceToggleLabel.addEventListener('click', (e) => e.stopPropagation());
+  }
 
   els.form.addEventListener('submit', saveSettings);
 
