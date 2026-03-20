@@ -71,11 +71,7 @@ var LingoLayer = window.LingoLayer || {};
       try {
         const result = await chrome.storage.local.get('lingolayer_settings');
         const settings = result.lingolayer_settings || {};
-        if (!settings.elevenlabsKey) {
-          console.warn('[LingoLayer] No ElevenLabs API key set.');
-          return;
-        }
-        await LingoLayer.speakPhrase(replacement, settings.language || 'German', settings.elevenlabsKey);
+        await LingoLayer.speakPhrase(replacement, settings.language || 'German', settings.elevenlabsKey || '');
       } catch (err) {
         console.error('[LingoLayer] TTS error:', err);
       } finally {

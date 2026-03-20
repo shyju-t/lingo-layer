@@ -17,17 +17,44 @@
     endpointUrl: ''
   };
 
-  const MODEL_HINTS = {
-    featherless: 'Qwen/Qwen2.5-7B-Instruct',
-    openai: 'gpt-4o-mini',
-    claude: 'claude-sonnet-4-20250514',
-    local: 'llama3.2'
+  const PROVIDER_MODELS = {
+    featherless: [
+      { value: 'Qwen/Qwen3-8B', label: 'Qwen 3 8B' },
+      { value: 'Qwen/Qwen3-32B', label: 'Qwen 3 32B' },
+      { value: 'Qwen/Qwen2.5-7B-Instruct', label: 'Qwen 2.5 7B Instruct' },
+      { value: 'Qwen/Qwen2.5-32B-Instruct', label: 'Qwen 2.5 32B Instruct' },
+      { value: 'meta-llama/Llama-3.1-8B-Instruct', label: 'Llama 3.1 8B' },
+      { value: 'mistralai/Mistral-7B-Instruct-v0.2', label: 'Mistral 7B v0.2' }
+    ],
+    openai: [
+      { value: 'gpt-4.1-nano', label: 'GPT-4.1 Nano (fastest)' },
+      { value: 'gpt-4.1-mini', label: 'GPT-4.1 Mini' },
+      { value: 'gpt-4.1', label: 'GPT-4.1' },
+      { value: 'gpt-4o-mini', label: 'GPT-4o Mini' },
+      { value: 'gpt-4o', label: 'GPT-4o' },
+      { value: 'o4-mini', label: 'o4-mini (reasoning)' },
+      { value: 'o3-mini', label: 'o3-mini (reasoning)' }
+    ],
+    claude: [
+      { value: 'claude-haiku-4-5-20251001', label: 'Claude Haiku 4.5 (fastest)' },
+      { value: 'claude-sonnet-4-6', label: 'Claude Sonnet 4.6' },
+      { value: 'claude-sonnet-4-20250514', label: 'Claude Sonnet 4' },
+      { value: 'claude-opus-4-6', label: 'Claude Opus 4.6' }
+    ],
+    gemini: [
+      { value: 'gemini-2.5-flash-lite', label: 'Gemini 2.5 Flash Lite (fastest)' },
+      { value: 'gemini-2.5-flash', label: 'Gemini 2.5 Flash' },
+      { value: 'gemini-2.5-pro', label: 'Gemini 2.5 Pro' },
+      { value: 'gemini-2.0-flash', label: 'Gemini 2.0 Flash' }
+    ],
+    local: []
   };
 
   const KEY_HINTS = {
     featherless: 'fl-...',
     openai: 'sk-...',
     claude: 'sk-ant-...',
+    gemini: 'AIza...',
     local: 'optional – leave blank if none'
   };
 
@@ -68,6 +95,38 @@
     els.endpointField.style.display = provider === 'local' ? '' : 'none';
   }
 
+  function populateModelDropdown(provider, selectedModel) {
+    const models = PROVIDER_MODELS[provider] || [];
+    els.model.innerHTML = '';
+
+    if (provider === 'local') {
+      const opt = document.createElement('option');
+      opt.value = selectedModel || '';
+      opt.textContent = selectedModel || 'Enter model name';
+      els.model.appendChild(opt);
+      els.model.setAttribute('contenteditable', 'false');
+      return;
+    }
+
+    models.forEach(m => {
+      const opt = document.createElement('option');
+      opt.value = m.value;
+      opt.textContent = m.label;
+      els.model.appendChild(opt);
+    });
+
+    if (selectedModel && !models.some(m => m.value === selectedModel)) {
+      const custom = document.createElement('option');
+      custom.value = selectedModel;
+      custom.textContent = selectedModel;
+      els.model.insertBefore(custom, els.model.firstChild);
+    }
+
+    if (selectedModel) {
+      els.model.value = selectedModel;
+    }
+  }
+
   function stashCurrentProvider() {
     if (!currentSettings) return;
     const prev = currentSettings.provider;
@@ -87,11 +146,10 @@
     const models = currentSettings?.providerModels || {};
     const endpoints = currentSettings?.providerEndpoints || {};
     els.apiKey.value = keys[provider] || '';
-    els.model.value = models[provider] || '';
     els.endpointUrl.value = endpoints[provider] || '';
-    els.model.placeholder = MODEL_HINTS[provider] || 'model name';
     els.apiKey.placeholder = KEY_HINTS[provider] || 'API key';
     els.endpointUrl.placeholder = ENDPOINT_HINTS[provider] || 'http://localhost:11434/v1/chat/completions';
+    populateModelDropdown(provider, models[provider] || '');
     toggleEndpointField(provider);
   }
 
@@ -103,7 +161,6 @@
     if (!currentSettings.providerModels) currentSettings.providerModels = {};
     if (!currentSettings.providerEndpoints) currentSettings.providerEndpoints = {};
 
-    // Migrate old single-key format
     if (currentSettings.apiKey && !currentSettings.providerKeys[currentSettings.provider]) {
       currentSettings.providerKeys[currentSettings.provider] = currentSettings.apiKey;
     }
@@ -133,7 +190,8 @@
 
     const provider = els.provider.value;
     const apiKey = els.apiKey.value.trim();
-    const model = els.model.value.trim() || MODEL_HINTS[provider] || '';
+    const models = PROVIDER_MODELS[provider] || [];
+    const model = els.model.value.trim() || (models[0]?.value) || '';
     const endpointUrl = els.endpointUrl.value.trim();
 
     if (provider !== 'local' && !apiKey) {

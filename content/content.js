@@ -130,7 +130,7 @@ var LingoLayer = window.LingoLayer || {};
       const result = await LingoLayer.callLLM(text, settings);
       LOG('LLM returned', result.replacements.length, 'replacements');
 
-      const voiceOn = !!(settings.voiceEnabled && settings.elevenlabsKey);
+      const voiceOn = !!settings.voiceEnabled;
       const count = LingoLayer.injectReplacements(postBody, result.replacements, voiceOn);
       LOG('Successfully injected', count, 'replacements');
 
